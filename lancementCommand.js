@@ -1,41 +1,41 @@
+// lancementCommand.js
+
 module.exports = {
     name: 'lancement',
-    description: 'Envoie un message automatique pour annoncer le lancement de la session avec mention du rôle "🏠| Résident" et mentionne la personne qui lance la session.',
+    description: 'Lance une session avec une mention du rôle Résident et l\'heure de lancement.',
     async execute(message) {
-      // Vérifie si le rôle "🏠| Résident" existe
-      const roleResident = message.guild.roles.cache.find(role => role.name === '🏠| Résident');
-      if (!roleResident) {
-        return message.reply('Le rôle "🏠| Résident" est introuvable sur ce serveur.');
-      }
-  
-      // Vérifie si la commande contient un mention de l'utilisateur
-      const mentionedUser = message.mentions.users.first();
-      if (!mentionedUser) {
-        return message.reply('Veuillez mentionner l\'utilisateur qui lance la session.');
-      }
-  
       try {
-        // Envoie le message avec la mention du rôle et de l'utilisateur
-        await message.channel.send(`
-          **SESSION LANCÉE**
+        // Vérifie si l'auteur du message a le rôle "🏠| Résident"
+        const roleResident = message.guild.roles.cache.find(role => role.name === '🏠| Résident');
+        if (!roleResident || !message.member.roles.cache.has(roleResident.id)) {
+          return message.reply("Vous devez avoir le rôle `🏠| Résident` pour lancer une session.");
+        }
   
-          La session est lancée !
+        // Stocke l'heure de début de la session dans un objet global (peut être amélioré)
+        const startTime = Date.now();
+        global.sessionStartTime = startTime; // Enregistre l'heure de début
   
-          Vous pouvez maintenant rejoindre le lanceur : 
+        // Mentionne le rôle et le lanceur
+        const launchMessage = `**SESSION LANCÉE**
   
-          ${mentionedUser}
+        La session est lancée !
   
-          Bonne session à tous ! 🏇
+        Vous pouvez maintenant rejoindre le lanceur : 
   
-          ${roleResident}  
-        `);
+        ${message.author}
   
-        // Supprime le message de l'utilisateur (-lancement)
-        await message.delete();
+        Bonne session à tous ! 🏇
         
+        <@&${roleResident.id}>`; // Mention du rôle globalement
+        
+        // Envoie le message dans le salon
+        await message.channel.send(launchMessage);
+  
+        // Supprime le message de commande
+        await message.delete(); // Efface le message contenant la commande
       } catch (error) {
         console.error(error);
-        message.reply('Une erreur est survenue lors de l\'envoi du message de lancement de session.');
+        message.reply("Une erreur est survenue lors du lancement de la session.");
       }
     }
   };
