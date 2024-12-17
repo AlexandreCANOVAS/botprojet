@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
 const sessionCommand = require('./sessionCommand'); // Import de la commande session
 const propositionSessionCommand = require('./propositionSessionCommand'); // Import de la commande proposition session
+const lancementCommand = require('./lancementCommand.js');
 
 const TOKEN = process.env.DISCORD_TOKEN; // Charge le token depuis les variables d'environnement
 const PREFIX = '-'; // Préfixe pour les commandes
@@ -27,7 +28,13 @@ client.on('messageCreate', async (message) => {
   console.log(`Contenu brut : "${message.content}"`);
   console.log(`Type : ${message.type}`);
 
-  
+  if (message.author.bot) return;
+
+  const prefix = '-';  
+
+  if (message.content.startsWith(`${prefix}lancement`)) {
+    await lancementCommand.execute(message);
+  }
   
   // Ignorer les messages du bot lui-même
   if (message.author.bot) return;
