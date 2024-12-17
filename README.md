@@ -40,11 +40,12 @@ L'objectif principal est de créer le bot RP Red Dead Redemption le plus complet
 
 Ce projet a pour but de rendre les sessions RP plus immersives et organisées, tout en apportant une gestion plus fluide des éléments clés du jeu. N'hésitez pas à rejoindre le projet et à contribuer pour faire de ce bot l'outil ultime pour tous les serveurs RP Red Dead Redemption !
 
-## **Dernère mise à jour effectuée 17.12.2024**
+## **Dernière mise à jour effectuée 17.12.2024**
 
-automatisation d'un lien cliquable toutes les 2h de 08h à 22h pour pouvoir voter pour notre serveur dans un salon spécifique.
+Automatisation d'un lien cliquable toutes les 2h de 08h à 22h pour pouvoir voter pour notre serveur dans un salon spécifique.
 
-Précédente Mise à jour : WOLF RP V2.1.5 (17.12.2024)
+Précédente Mise à jour : WOLF RP V2.1.5 (17.12.2024)  
 Mise à jour            : WOLF RP V2.2   (17.12.2024)
+
 
 
