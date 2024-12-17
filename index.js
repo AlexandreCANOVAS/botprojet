@@ -4,6 +4,9 @@ const sessionCommand = require('./sessionCommand'); // Import de la commande ses
 const propositionSessionCommand = require('./propositionSessionCommand'); // Import de la commande proposition session
 const lancementCommand = require('./lancementCommand.js');
 const clotureCommand = require('./clotureCommand.js');
+const voteTopServeur = require('./voteTopServeur');  // Importer la fonctionnalité de vote
+
+
 
 const TOKEN = process.env.DISCORD_TOKEN; // Charge le token depuis les variables d'environnement
 const PREFIX = '-'; // Préfixe pour les commandes
@@ -20,6 +23,8 @@ const client = new Client({
 // Lors de la connexion du bot
 client.once('ready', () => {
   console.log(`Bot connecté en tant que ${client.user.tag}`);
+  voteTopServeur.startRecurringMessages(client);  // Démarrer l'envoi récurrent des messages
+  
 });
 
 // Écoute des messages entrants
