@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
+const sessionCommand = require('./sessionCommand'); // Import de la commande session
 
-// Remplacez par votre token de bot
 const TOKEN = process.env.DISCORD_TOKEN; // Charge le token depuis les variables d'environnement
 const PREFIX = '-'; // Préfixe pour les commandes
 
@@ -25,6 +25,7 @@ client.on('messageCreate', async (message) => {
   console.log(`Auteur : ${message.author.tag}`);
   console.log(`Contenu brut : "${message.content}"`);
   console.log(`Type : ${message.type}`);
+  
   // Ignorer les messages du bot lui-même
   if (message.author.bot) return;
 
@@ -34,6 +35,18 @@ client.on('messageCreate', async (message) => {
   // Divise le message en commande et arguments
   const args = message.content.slice(PREFIX.length).trim().split(/ +/);
   const command = args.shift().toLowerCase();
+
+   // Commande 'session'
+   if (command === 'session') {
+    // Supprime le message contenant la commande
+    try {
+      await message.delete(); // Cette ligne supprime le message contenant la commande
+      // Après la suppression, le message est déjà traité, donc la commande est exécutée ici
+      return sessionCommand.execute(message); // Exécute la commande
+    } catch (error) {
+      console.error("Erreur lors de la suppression du message : ", error);
+    }
+  }
 
   // Commande 'accepter'
   if (command === 'accepter') {
@@ -90,7 +103,37 @@ A bientôt en RP sur **${message.guild.name}**.`
       message.reply("Une erreur est survenue lors de l'attribution des rôles.");
     }
   }
+
+  // Commande 'session' - Appel de la nouvelle fonctionnalité
+  if (command === 'session') {
+    sessionCommand.execute(message);
+  }
 });
+
+// Ajoutez cette commande pour tester la récupération des rôles
+client.on('messageCreate', async (message) => {
+  if (message.content === '-testRoles') {
+    const roleResident = message.guild.roles.cache.find(role => role.name === '🏠| Résident');
+    if (!roleResident) {
+      return message.reply('Le rôle "🏠| Résident" est introuvable sur ce serveur.');
+    }
+
+    // Liste des membres avec le rôle
+    const membersWithRole = message.guild.members.cache.filter(member => member.roles.cache.has(roleResident.id));
+
+    if (membersWithRole.size === 0) {
+      return message.reply('Aucun membre avec le rôle "🏠| Résident" trouvé.');
+    }
+
+    let response = 'Membres avec le rôle "🏠| Résident" :\n';
+    membersWithRole.forEach(member => {
+      response += `${member.user.tag}\n`;
+    });
+
+    message.reply(response);
+  }
+});
+
 
 // Connexion du bot
 client.login(TOKEN);
