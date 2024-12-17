@@ -3,6 +3,7 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const sessionCommand = require('./sessionCommand'); // Import de la commande session
 const propositionSessionCommand = require('./propositionSessionCommand'); // Import de la commande proposition session
 const lancementCommand = require('./lancementCommand.js');
+const clotureCommand = require('./clotureCommand.js');
 
 const TOKEN = process.env.DISCORD_TOKEN; // Charge le token depuis les variables d'environnement
 const PREFIX = '-'; // Préfixe pour les commandes
@@ -30,14 +31,15 @@ client.on('messageCreate', async (message) => {
 
   if (message.author.bot) return;
 
-  const prefix = '-';  
+  // Supprime la déclaration de `prefix` ici
 
-  if (message.content.startsWith(`${prefix}lancement`)) {
+  if (message.content.startsWith(`${PREFIX}clôture`)) {
+    await clotureCommand.execute(message);
+  }
+
+  if (message.content.startsWith(`${PREFIX}lancement`)) {
     await lancementCommand.execute(message);
   }
-  
-  // Ignorer les messages du bot lui-même
-  if (message.author.bot) return;
 
   // Vérifie si le message commence par le préfixe
   if (!message.content.startsWith(PREFIX)) return;
@@ -124,31 +126,6 @@ A bientôt en RP sur **${message.guild.name}**.`
     sessionCommand.execute(message);
   }
 });
-
-// Ajoutez cette commande pour tester la récupération des rôles
-client.on('messageCreate', async (message) => {
-  if (message.content === '-testRoles') {
-    const roleResident = message.guild.roles.cache.find(role => role.name === '🏠| Résident');
-    if (!roleResident) {
-      return message.reply('Le rôle "🏠| Résident" est introuvable sur ce serveur.');
-    }
-
-    // Liste des membres avec le rôle
-    const membersWithRole = message.guild.members.cache.filter(member => member.roles.cache.has(roleResident.id));
-
-    if (membersWithRole.size === 0) {
-      return message.reply('Aucun membre avec le rôle "🏠| Résident" trouvé.');
-    }
-
-    let response = 'Membres avec le rôle "🏠| Résident" :\n';
-    membersWithRole.forEach(member => {
-      response += `${member.user.tag}\n`;
-    });
-
-    message.reply(response);
-  }
-});
-
 
 // Connexion du bot
 client.login(TOKEN);
