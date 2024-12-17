@@ -11,17 +11,17 @@ module.exports = {
       // Mentionne tous les membres avec le rôle "🏠| Résident"
       try {
         await message.channel.send(`
-          **Lancement de session**
+          **:rotating_light: Lancement de session :rotating_light: **
   
-          La session est en cours de lancement,   
+          La session est en cours de lancement :battery: ,   
           Veuillez vous préparer et attendre le message de lancement. 
   
-          N'oubliez pas : 
-          ° Retirer vos cartes de compétences
-          ° Retirer la visée automatique
-          ° Mettre la boussole 
-          ° Vérifier que votre chat vocal est bien actif
-          ° Retirer le nom au dessus des joueurs
+          :warning: N'oubliez pas : 
+          ° Retirer vos cartes de compétences :name_badge: :map:
+          ° Retirer la visée automatique :name_badge: :dart: 
+          ° Mettre la boussole :white_check_mark: :compass: 
+          ° Vérifier que votre chat vocal est bien actif :white_check_mark: :microphone2: 
+          ° Retirer le nom au dessus des joueurs :name_badge: :video_game: 
   
           ${roleResident.toString()}  
         `);
