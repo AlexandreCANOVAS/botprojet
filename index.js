@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
 const sessionCommand = require('./sessionCommand'); // Import de la commande session
+const propositionSessionCommand = require('./propositionSessionCommand'); // Import de la commande proposition session
 
 const TOKEN = process.env.DISCORD_TOKEN; // Charge le token depuis les variables d'environnement
 const PREFIX = '-'; // Préfixe pour les commandes
@@ -25,6 +26,8 @@ client.on('messageCreate', async (message) => {
   console.log(`Auteur : ${message.author.tag}`);
   console.log(`Contenu brut : "${message.content}"`);
   console.log(`Type : ${message.type}`);
+
+  
   
   // Ignorer les messages du bot lui-même
   if (message.author.bot) return;
@@ -46,6 +49,11 @@ client.on('messageCreate', async (message) => {
     } catch (error) {
       console.error("Erreur lors de la suppression du message : ", error);
     }
+  }
+
+   // Commande 'proposition session'
+   if (message.content.startsWith(`${PREFIX}proposition session`)) {
+    propositionSessionCommand.execute(message);
   }
 
   // Commande 'accepter'
