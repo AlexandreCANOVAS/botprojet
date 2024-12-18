@@ -5,6 +5,7 @@ const propositionSessionCommand = require('./propositionSessionCommand'); // Imp
 const lancementCommand = require('./lancementCommand.js');
 const clotureCommand = require('./clotureCommand.js');
 const voteTopServeur = require('./voteTopServeur');  // Importer la fonctionnalité de vote
+const guildMemberEvents = require('../botprojet/events/memberAddRemove.js');
 
 
 
@@ -26,6 +27,14 @@ client.once('ready', () => {
   console.log(`Bot connecté en tant que ${client.user.tag}`);
   voteTopServeur.startRecurringMessages(client);  // Démarrer l'envoi récurrent des messages
   
+});
+
+client.on('guildMemberAdd', (member) => {
+  guildMemberEvents.execute(member, 'add');  // Appel de l'événement "add"
+});
+
+client.on('guildMemberRemove', (member) => {
+  guildMemberEvents.execute(member, 'remove');  // Appel de l'événement "remove"
 });
 
 // Écoute des messages entrants
