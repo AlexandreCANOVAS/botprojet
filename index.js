@@ -8,6 +8,7 @@ const voteTopServeur = require('./voteTopServeur');  // Importer la fonctionnali
 
 
 
+
 const TOKEN = process.env.DISCORD_TOKEN; // Charge le token depuis les variables d'environnement
 const PREFIX = '-'; // Préfixe pour les commandes
 
@@ -33,6 +34,8 @@ client.on('messageCreate', async (message) => {
   console.log(`Auteur : ${message.author.tag}`);
   console.log(`Contenu brut : "${message.content}"`);
   console.log(`Type : ${message.type}`);
+
+  
 
   if (message.author.bot) return;
 
