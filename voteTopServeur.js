@@ -42,7 +42,7 @@ module.exports = {
     }
 
     // Trouver le rôle "Résident" par son nom
-    const role = channel.guild.roles.cache.find(r => r.name === 'Résident');
+    const role = channel.guild.roles.cache.find(r => r.name === '🏠| Résident');
 
     if (!role) {
       console.error('Le rôle "Résident" n\'a pas été trouvé.');
@@ -60,15 +60,14 @@ module.exports = {
         `Vous pouvez voter pour soutenir le serveur et notre travail !\n\n` +
         `Plus nous avons de votes et plus nous avons de membres ! ❤️\n\n` +
         `Merci à vous ! 🥳\n\n` +
-        `Lien pour voter : ${voteURL}\n\n` +
-        `🏠| ${roleMention}`  // Mentionner le rôle avec l'emoji devant
+        `Lien pour voter : ${voteURL}\n\n`
       )
       .setImage(imageURL)  // Ajouter l'image récupérée à l'embed
       .setTimestamp();
 
     // Création du bouton pour le vote
     const button = new ButtonBuilder()
-      .setLabel('📋 Voter maintenant')  // Utilisation de l'emoji Unicode 📋 directement
+      .setLabel('📋 Voter maintenant')  
       .setStyle(ButtonStyle.Link)
       .setURL(voteURL);
 
@@ -76,11 +75,12 @@ module.exports = {
     const row = new ActionRowBuilder().addComponents(button);
 
     try {
-      // Envoi du message avec l'embed et le bouton
+      // Envoi du message avec la mention du rôle en dehors de l'embed
       await channel.send({
-        embeds: [embed],
+        content: `${roleMention}`,  // Mentionner le rôle ici, en dehors de l'embed
+        embeds: [embed],  // Ajouter l'embed après la mention
         components: [row],  // Ajouter l'ActionRow avec le bouton
-        disableMentions: 'all'  // Cette option permet d'éviter que les mentions perturbent l'embed
+        disableMentions: 'none'  // Permettre les mentions dans le message
       });
       console.log('Message envoyé dans le salon "top-serveur".');
     } catch (error) {
@@ -88,19 +88,11 @@ module.exports = {
     }
   },
 
-  // Fonction pour démarrer l'envoi récurrent du message toutes les 2 heures entre 08h et 22h
+  // Fonction pour démarrer l'envoi récurrent du message toutes les 2 heures
   startRecurringMessages: (client) => {
     setInterval(() => {
-      const currentHour = new Date().getHours();  // Récupérer l'heure actuelle
-      console.log(`Heure actuelle : ${currentHour}h`);
-
-      // Vérifier si l'heure est entre 8h et 22h
-      if (currentHour >= 8 && currentHour <= 22) {
-        console.log('Envoi du message - Heure valide (entre 8h et 22h)');
-        module.exports.sendVoteMessage(client);
-      } else {
-        console.log('Heure non valide - En dehors de l\'intervalle 8h-22h');
-      }
+      console.log('Envoi du message toutes les 2 heures');
+      module.exports.sendVoteMessage(client);
     }, 2 * 60 * 60 * 1000);  // Envoi du message toutes les 2 heures (2h = 7200000 ms)
   },
 };

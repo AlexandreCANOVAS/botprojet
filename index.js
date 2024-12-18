@@ -5,6 +5,8 @@ const propositionSessionCommand = require('./propositionSessionCommand'); // Imp
 const lancementCommand = require('./lancementCommand.js');
 const clotureCommand = require('./clotureCommand.js');
 const voteTopServeur = require('./voteTopServeur');  // Importer la fonctionnalité de vote
+const guildMemberEvents = require('../botprojet/events/memberAddRemove.js');
+
 
 
 
@@ -27,12 +29,22 @@ client.once('ready', () => {
   
 });
 
+client.on('guildMemberAdd', (member) => {
+  guildMemberEvents.execute(member, 'add');  // Appel de l'événement "add"
+});
+
+client.on('guildMemberRemove', (member) => {
+  guildMemberEvents.execute(member, 'remove');  // Appel de l'événement "remove"
+});
+
 // Écoute des messages entrants
 client.on('messageCreate', async (message) => {
   console.log("Message reçu :");
   console.log(`Auteur : ${message.author.tag}`);
   console.log(`Contenu brut : "${message.content}"`);
   console.log(`Type : ${message.type}`);
+
+  
 
   if (message.author.bot) return;
 
