@@ -1,6 +1,6 @@
 # **PROJET BOT RP RED DEAD REDEMPTION**
 
-![Image du projet](./assets/imageNormale.png)
+![Image du projet](./assets/logoServeur.png)
 
 ## **Présentation du projet**
 
