@@ -5,8 +5,8 @@ const propositionSessionCommand = require('./propositionSessionCommand'); // Imp
 const lancementCommand = require('./lancementCommand.js');
 const clotureCommand = require('./clotureCommand.js');
 const voteTopServeur = require('./voteTopServeur');  // Importer la fonctionnalité de vote
-const guildMemberEvents = require('../botprojet/events/memberAddRemove.js');
-
+const guildMemberEvents = require('../BOT-WOLF-V2-RDR/events/memberAddRemove.js');
+const roleReaction = require('./roleReaction');
 
 
 
@@ -18,7 +18,8 @@ const client = new Client({
     GatewayIntentBits.Guilds,              // Permet d'interagir avec les serveurs
     GatewayIntentBits.GuildMessages,       // Permet de lire et répondre aux messages
     GatewayIntentBits.MessageContent,      // Permet de lire le contenu des messages
-    GatewayIntentBits.GuildMembers         // Permet de gérer les rôles et membres du serveur
+    GatewayIntentBits.GuildMembers,         // Permet de gérer les rôles et membres du serveur
+    GatewayIntentBits.GuildMessageReactions  // Pour gérer les réactions
   ],
 });
 
@@ -26,7 +27,46 @@ const client = new Client({
 client.once('ready', () => {
   console.log(`Bot connecté en tant que ${client.user.tag}`);
   voteTopServeur.startRecurringMessages(client);  // Démarrer l'envoi récurrent des messages
-  
+  // Démarrer la fonctionnalité de rôle avec réaction
+  roleReaction.sendMessage(client);  // Envoie le message avec la réaction
+});
+
+client.on('messageReactionAdd', async (reaction, user) => {
+  try {
+    // Ignorer les réactions des bots
+    if (user.bot) return;
+
+    // Vérifie si le message provient d'un serveur
+    if (!reaction.message.guild) return;
+
+    const member = await reaction.message.guild.members.fetch(user.id); // Récupère le membre dans le cache ou depuis l'API
+
+    if (!member) {
+      console.log(`Membre introuvable pour l'utilisateur ${user.tag}`);
+      return;
+    }
+
+
+    if (reaction.emoji.name === '📝') {
+      const role = reaction.message.guild.roles.cache.find(r => r.name === '📝 | RP écrit');
+      if (role) {
+        await member.roles.add(role); // Attribuer le rôle
+        console.log(`${user.tag} a reçu le rôle 📝 | RP écrit`);
+
+        // Envoi d'un message privé pour confirmer l'attribution du rôle
+        try {
+          await member.send(`🎉 Bonjour ${user.username}, vous avez reçu le rôle **📝 | RP écrit** ! 🎉\n\nVous pouvez maintenant accéder à tout le contenu RP écrit et commencer à participer pleinement au rôle-play. Merci de votre engagement sur le serveur !`);
+          console.log(`Message privé envoyé à ${user.tag}`);
+        } catch (error) {
+          console.error(`Erreur lors de l'envoi du message privé à ${user.tag}:`, error);
+        }
+      } else {
+        console.log("Le rôle '📝 | RP écrit' n'a pas été trouvé.");
+      }
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout de la réaction :', error);
+  }
 });
 
 client.on('guildMemberAdd', (member) => {
